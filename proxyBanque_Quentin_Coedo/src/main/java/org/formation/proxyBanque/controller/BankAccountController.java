@@ -1,6 +1,7 @@
 package org.formation.proxyBanque.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.formation.proxyBanque.Dto.BankAccountDto;
 import org.formation.proxyBanque.entity.BankAccount;
 import org.formation.proxyBanque.service.BankAccountServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -17,14 +18,14 @@ public class BankAccountController {
     private final BankAccountServiceImpl bankAccountService;
 
     @PostMapping("bankAccount/save")
-    public ResponseEntity<BankAccount> saveAccount(@RequestBody BankAccount bankAccount){
-        BankAccount bankAccountSaved = bankAccountService.createBankAccount(bankAccount);
+    public ResponseEntity<BankAccountDto> saveAccount(@RequestBody BankAccount bankAccount){
+        BankAccountDto bankAccountSaved = bankAccountService.createBankAccount(bankAccount);
         return new ResponseEntity<>(bankAccountSaved,  HttpStatus.OK);
     }
 
     @GetMapping("bankAccounts")
-    public ResponseEntity<List<BankAccount>> getAllBankAccounts(){
-        List<BankAccount> bankAccounts = bankAccountService.getBankAccounts();
+    public ResponseEntity<List<BankAccountDto>> getAllBankAccounts(){
+        List<BankAccountDto> bankAccounts = bankAccountService.getBankAccounts();
         if (!bankAccounts.isEmpty()) {
             return new ResponseEntity<>(bankAccounts, HttpStatus.OK);
         } else  {
@@ -33,8 +34,8 @@ public class BankAccountController {
     }
 
     @GetMapping("bankAccount/{id}")
-    public ResponseEntity<BankAccount> getBankAccount(@PathVariable Long id){
-        Optional<BankAccount> bankAccount = bankAccountService.getBankAccountById(id);
+    public ResponseEntity<BankAccountDto> getBankAccount(@PathVariable Long id){
+        Optional<BankAccountDto> bankAccount = bankAccountService.getBankAccountById(id);
         if (bankAccount.isPresent()) {
             return new ResponseEntity<>(bankAccount.get(), HttpStatus.OK);
         }  else {
@@ -43,8 +44,8 @@ public class BankAccountController {
     }
 
     @DeleteMapping("bankAccount/delete/{id}")
-    public ResponseEntity<BankAccount> deleteBankAccount(@PathVariable Long id){
-        Optional<BankAccount> bankAccount = bankAccountService.deleteBankAccountById(id);
+    public ResponseEntity<BankAccountDto> deleteBankAccount(@PathVariable Long id){
+        Optional<BankAccountDto> bankAccount = bankAccountService.deleteBankAccountById(id);
 
         if (bankAccount.isPresent()) {
             return new ResponseEntity<>(bankAccount.get(), HttpStatus.OK);
@@ -54,8 +55,8 @@ public class BankAccountController {
     }
 
     @PutMapping("bankAccount/update")
-    public ResponseEntity<BankAccount> updateBankAccount(@RequestBody BankAccount bankAccount){
-        Optional<BankAccount> bankAccountSaved = bankAccountService.updateBankAccount(bankAccount);
+    public ResponseEntity<BankAccountDto> updateBankAccount(@RequestBody BankAccount bankAccount){
+        Optional<BankAccountDto> bankAccountSaved = bankAccountService.updateBankAccount(bankAccount);
         if (bankAccountSaved.isPresent()) {
             return new ResponseEntity<>(bankAccountSaved.get(), HttpStatus.OK);
         } else {

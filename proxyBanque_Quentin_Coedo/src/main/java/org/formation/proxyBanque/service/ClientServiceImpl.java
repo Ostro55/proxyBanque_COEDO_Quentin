@@ -1,6 +1,7 @@
 package org.formation.proxyBanque.service;
 
 import lombok.RequiredArgsConstructor;
+import org.formation.proxyBanque.Dto.BankAccountDto;
 import org.formation.proxyBanque.entity.BankAccount;
 import org.formation.proxyBanque.entity.Client;
 import org.formation.proxyBanque.repository.BankAccountRepository;
@@ -11,32 +12,50 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ClientServiceImpl implements IClientService{
     @Override
-    public Set<BankAccount> getBankAccounts(Long id) {
+    public Set<BankAccountDto> getBankAccounts(Long id) {
         Optional<Client> client = clientRepository.findById(id);
         if (client.isPresent()) {
-            return client.get().getBank_accounts();
+            Set<BankAccountDto> bankAccountDtos = client.get().getBank_accounts()
+                    .stream().map(v -> new BankAccountDto(v.getAccountNumber()))
+                    .collect(Collectors.toSet());
+            return bankAccountDtos;
         } else {
             return null;
         }
     }
 
     @Override
-    public BankAccount addNewBankAccount(Long id, Long bankAccount_id) {
+    public BankAccountDto addNewBankAccount(Long id, BankAccount bankAccount) {
         Optional<Client> client = clientRepository.findById(id);
-        Optional<BankAccount> bankAccount = bankAccountRepository.findById(bankAccount_id);
-        if (client.isPresent() &&  bankAccount.isPresent()) {
+        if (client.isPresent()) {
+            bankAccount.setOwner(client.get());
             Client cli = client.get();
-            cli.getBank_accounts().add(bankAccount.get());
+            cli.getBank_accounts().add(bankAccount);
             clientRepository.save(cli);
-            return bankAccount.get();
+            return new  BankAccountDto(bankAccount.getAccountNumber());
         } else {
             return null;
         }
+    }
+
+    @Override
+    public BankAccountDto remove(Long id, Long bankAccountId) {
+        Client client = clientRepository.findById(id).orElse(null);
+        if (client != null) {
+            BankAccount bankAccount = bankAccountRepository.findById(bankAccountId).orElse(null);
+            if (bankAccount != null && client.getBank_accounts().contains(bankAccount)) {
+                client.getBank_accounts().remove(bankAccount);
+                bankAccountRepository.delete(bankAccount);
+                return new BankAccountDto(bankAccount.getAccountNumber());
+            }
+        }
+        return null;
     }
 
     private final ClientRepository clientRepository;

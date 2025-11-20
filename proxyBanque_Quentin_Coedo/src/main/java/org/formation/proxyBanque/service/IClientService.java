@@ -1,8 +1,8 @@
 package org.formation.proxyBanque.service;
 
+import org.formation.proxyBanque.Dto.BankAccountDto;
 import org.formation.proxyBanque.entity.BankAccount;
 import org.formation.proxyBanque.entity.Client;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +20,9 @@ public interface IClientService {
 
     Optional<Client> UpdateClient(Client client);
 
-    Set<BankAccount> getBankAccounts(Long id);
+    Set<BankAccountDto> getBankAccounts(Long id);
 
-    BankAccount addNewBankAccount(Long id, Long bankAccount_id);
+    BankAccountDto addNewBankAccount(Long id, BankAccount bankAccount);
+
+    BankAccountDto remove(Long id, Long bankAccountId);
 }

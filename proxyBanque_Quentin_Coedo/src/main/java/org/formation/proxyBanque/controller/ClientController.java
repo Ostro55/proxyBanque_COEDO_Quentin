@@ -1,6 +1,7 @@
 package org.formation.proxyBanque.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.formation.proxyBanque.Dto.BankAccountDto;
 import org.formation.proxyBanque.entity.BankAccount;
 import org.formation.proxyBanque.entity.Client;
 import org.formation.proxyBanque.service.ClientServiceImpl;
@@ -65,10 +66,18 @@ public class ClientController {
     }
 
     @GetMapping("client/bankAccounts/{id}")
-    public ResponseEntity<Set<BankAccount>> getBankAccounts(@PathVariable Long id) {
-        Set<BankAccount> bankAccounts = clientService.getBankAccounts(id);
+    public ResponseEntity<Set<BankAccountDto>> getBankAccounts(@PathVariable Long id) {
+        Set<BankAccountDto> bankAccounts = clientService.getBankAccounts(id);
         return new ResponseEntity<>(bankAccounts, HttpStatus.OK);
     }
 
-
+    @PostMapping("client/bankAccount/new/{id}")
+    public ResponseEntity<BankAccountDto> newBankAccount(@RequestBody BankAccount bankAccount,
+                                                      @PathVariable Long id) {
+        BankAccountDto bankAccount1 = clientService.addNewBankAccount(id, bankAccount);
+        if (bankAccount1 != null) {
+            return new ResponseEntity<>(bankAccount1, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 }
