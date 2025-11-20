@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.formation</groupId>
-    <artifactId>cofeeMachine</artifactId>
+    <artifactId>proxyBanque</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>cofeeMachine</name>
-    <description>cofeeMachine</description>
+    <name>proxyBanque</name>
+    <description>proxyBanque</description>
     <url/>
     <licenses>
         <license/>
