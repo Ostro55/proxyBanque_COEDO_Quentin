@@ -1,13 +1,11 @@
-package org.formation.cofeemachine;
+package org.formation.proxyBanque;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CofeeMachineApplication {
-
+public class ProxyBanqueApplication {
     public static void main(String[] args) {
-        SpringApplication.run(CofeeMachineApplication.class, args);
+        SpringApplication.run(ProxyBanqueApplication.class, args);
     }
-
 }

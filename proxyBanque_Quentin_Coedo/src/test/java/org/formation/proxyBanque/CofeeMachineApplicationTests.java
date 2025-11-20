@@ -1,4 +1,4 @@
-package org.formation.cofeemachine;
+package org.formation.proxyBanque;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
