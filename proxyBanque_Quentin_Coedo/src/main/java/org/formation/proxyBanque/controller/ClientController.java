@@ -1,6 +1,7 @@
 package org.formation.proxyBanque.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.formation.proxyBanque.entity.BankAccount;
 import org.formation.proxyBanque.entity.Client;
 import org.formation.proxyBanque.service.ClientServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -61,4 +63,12 @@ public class ClientController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("client/bankAccounts/{id}")
+    public ResponseEntity<Set<BankAccount>> getBankAccounts(@PathVariable Long id) {
+        Set<BankAccount> bankAccounts = clientService.getBankAccounts(id);
+        return new ResponseEntity<>(bankAccounts, HttpStatus.OK);
+    }
+
+
 }

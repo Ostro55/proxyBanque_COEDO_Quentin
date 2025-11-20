@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -23,5 +24,5 @@ public class Client {
     private String phone_number;
 
     @OneToMany(mappedBy = "owner", orphanRemoval = true, cascade = CascadeType.ALL)
-    Set<BankAccount> bank_accounts;
+    Set<BankAccount> bank_accounts = new HashSet<>();
 }

@@ -3,6 +3,7 @@ package org.formation.proxyBanque.service;
 import lombok.RequiredArgsConstructor;
 import org.formation.proxyBanque.entity.BankAccount;
 import org.formation.proxyBanque.repository.BankAccountRepository;
+import org.formation.proxyBanque.repository.ClientRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Optional;
 public class BankAccountServiceImpl implements IBankAccountService{
 
     private final BankAccountRepository bankAccountRepository;
+    private final ClientRepository clientRepository;
 
     @Override
     public BankAccount createBankAccount(BankAccount bankAccount) {

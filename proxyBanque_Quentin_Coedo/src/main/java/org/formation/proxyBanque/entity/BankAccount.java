@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -14,7 +16,7 @@ public class BankAccount {
     private Long accountNumber;
 
     private Long balance;
-    private String opening_date;
+    private LocalDate opening_date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
