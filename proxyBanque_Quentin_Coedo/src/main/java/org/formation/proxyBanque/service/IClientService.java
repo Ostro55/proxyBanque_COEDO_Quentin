@@ -24,5 +24,6 @@ public interface IClientService {
 
     BankAccountDto addNewBankAccount(Long id, BankAccount bankAccount);
 
+    // Did not have time to use
     BankAccountDto remove(Long id, Long bankAccountId);
 }

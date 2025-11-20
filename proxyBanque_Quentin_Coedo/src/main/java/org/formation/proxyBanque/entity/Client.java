@@ -25,4 +25,6 @@ public class Client {
 
     @OneToMany(mappedBy = "owner", orphanRemoval = true, cascade = CascadeType.ALL)
     Set<BankAccount> bank_accounts = new HashSet<>();
+    // Maybe should have separated it between two account instead of a Set, one for saving and a classic one
+    // or add a limit of two to the set
 }

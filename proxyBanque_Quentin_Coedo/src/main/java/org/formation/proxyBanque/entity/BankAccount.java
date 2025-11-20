@@ -18,6 +18,9 @@ public class BankAccount {
     private Long balance;
     private LocalDate opening_date;
 
+    //Should contain an attribut indicating if its a saving or classic one
+    // It should use an enum
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private Client owner;
