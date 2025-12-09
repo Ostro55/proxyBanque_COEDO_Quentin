@@ -1,8 +1,12 @@
 package org.formation.proxyBanque.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.formation.proxyBanque.Dto.BankAccountCreateDto;
 import org.formation.proxyBanque.Dto.BankAccountDto;
+import org.formation.proxyBanque.Dto.BankAccountUpgradeDto;
 import org.formation.proxyBanque.entity.BankAccount;
+import org.formation.proxyBanque.mapper.BankAccountMapper;
 import org.formation.proxyBanque.repository.BankAccountRepository;
 import org.formation.proxyBanque.repository.ClientRepository;
 import org.springframework.stereotype.Service;
@@ -16,17 +20,17 @@ import java.util.stream.Collectors;
 public class BankAccountServiceImpl implements IBankAccountService{
 
     private final BankAccountRepository bankAccountRepository;
-    private final ClientRepository clientRepository;
+    private final BankAccountMapper bankAccountMapper;
 
     @Override
-    public BankAccountDto createBankAccount(BankAccount bankAccount) {
-        BankAccount bankAccount1 = bankAccountRepository.save(bankAccount);
-        return new BankAccountDto(bankAccount1.getAccountNumber());
+    public BankAccountDto createBankAccount(BankAccountCreateDto bankAccount) {
+        BankAccount bankAccount1 = bankAccountRepository.save(bankAccountMapper.toEntity(bankAccount));
+        return bankAccountMapper.toDto(bankAccount1);
     }
 
     @Override
     public List<BankAccountDto> getBankAccounts() {
-        return bankAccountRepository.findAll().stream().map(v -> new BankAccountDto(v.getAccountNumber())).collect(Collectors.toList());
+        return bankAccountRepository.findAll().stream().map(bankAccountMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -35,7 +39,7 @@ public class BankAccountServiceImpl implements IBankAccountService{
         if (bankAccount == null){
             return Optional.empty();
         } else {
-            return Optional.of(new BankAccountDto(bankAccount.getAccountNumber()));
+            return Optional.of(bankAccountMapper.toDto(bankAccount));
         }
     }
 
@@ -45,19 +49,19 @@ public class BankAccountServiceImpl implements IBankAccountService{
 
         if (bankAccount != null) {
             bankAccountRepository.deleteById(id);
-            return Optional.of(new BankAccountDto(bankAccount.getAccountNumber()));
+            return Optional.of(bankAccountMapper.toDto(bankAccount));
         }
         return Optional.empty();
     }
 
+    @Transactional
     @Override
-    public Optional<BankAccountDto> updateBankAccount(BankAccount bankAccount) {
-        Optional<BankAccount> bankAccountSaved = bankAccountRepository.findById(bankAccount.getAccountNumber());
-        if (bankAccountSaved.isPresent()) {
-            BankAccount bankAccount1 = bankAccountRepository.save(bankAccount);
-            return Optional.of(new BankAccountDto(bankAccount1.getAccountNumber()));
-        } else {
-            return Optional.empty();
-        }
+    public Optional<BankAccountDto> updateBankAccount(Long id, BankAccountUpgradeDto bankAccount) {
+        Optional<BankAccount> bankAccountSaved = bankAccountRepository.findById(id);
+
+        return  bankAccountSaved.map(v -> {
+            bankAccountMapper.updateEntity(v, bankAccount);
+            return bankAccountMapper.toDto(v);
+        });
     }
 }

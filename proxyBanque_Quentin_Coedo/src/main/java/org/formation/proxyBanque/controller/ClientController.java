@@ -1,7 +1,9 @@
 package org.formation.proxyBanque.controller;
 
+import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
-import org.formation.proxyBanque.Dto.BankAccountDto;
+import org.formation.proxyBanque.Dto.*;
 import org.formation.proxyBanque.entity.BankAccount;
 import org.formation.proxyBanque.entity.Client;
 import org.formation.proxyBanque.service.ClientServiceImpl;
@@ -21,58 +23,46 @@ public class ClientController {
     public final ClientServiceImpl clientService;
 
     @PostMapping("client/save")
-    public ResponseEntity<Client> save(@RequestBody Client client) {
-        Client newClient = clientService.createClient(client);
-        return new ResponseEntity<Client>(newClient, HttpStatus.OK);
+    public ResponseEntity<ClientDto> save(@RequestBody @Valid ClientCreateDto client) {
+        ClientDto newClient = clientService.createClient(client);
+        return new ResponseEntity<>(newClient, HttpStatus.OK);
     }
 
     @GetMapping("clients")
-    public ResponseEntity<List<Client>> getClients() {
-        List<Client> clients = clientService.getClients();
+    public ResponseEntity<List<ClientDto>> getClients() {
+        List<ClientDto> clients = clientService.getClients();
         if (!clients.isEmpty()) {
-            return new ResponseEntity<List<Client>>(clients, HttpStatus.OK);
+            return new ResponseEntity<>(clients, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("client/{id}")
-    public ResponseEntity<Client> getClient(@PathVariable Long id) {
-        Optional<Client> client = clientService.getClientById(id);
-        if (client.isPresent()) {
-            return new ResponseEntity<Client>(client.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<Client>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ClientDto> getClient(@PathVariable Long id) {
+        Optional<ClientDto> client = clientService.getClientById(id);
+        return client.map(clientDto -> new ResponseEntity<>(clientDto, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("client/delete/{id}")
-    public ResponseEntity<Client> deleteClient(@PathVariable Long id) {
-        Optional<Client> client = clientService.DeleteClientById(id);
-        if (client.isPresent()) {
-            return new ResponseEntity<Client>(client.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ClientDto> deleteClient(@PathVariable Long id) {
+        Optional<ClientDto> client = clientService.DeleteClientById(id);
+        return client.map(clientDto -> new ResponseEntity<>(clientDto, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PutMapping("client/update")
-    public ResponseEntity<Client> updateClient(@RequestBody Client client) {
-        Optional<Client> clientUpdated = clientService.UpdateClient(client);
-        if (clientUpdated.isPresent()) {
-            return new ResponseEntity<Client>(clientUpdated.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @PutMapping("client/{id}/update")
+    public ResponseEntity<ClientDto> updateClient(@PathVariable Long id, @RequestBody @Valid ClientUpgradeDto client) {
+        Optional<ClientDto> clientUpdated = clientService.UpdateClient(id, client);
+        return clientUpdated.map(clientDto -> new ResponseEntity<>(clientDto, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("client/bankAccounts/{id}")
+    @GetMapping("client/{id}/bankAccounts")
     public ResponseEntity<Set<BankAccountDto>> getBankAccounts(@PathVariable Long id) {
         Set<BankAccountDto> bankAccounts = clientService.getBankAccounts(id);
         return new ResponseEntity<>(bankAccounts, HttpStatus.OK);
     }
 
-    @PostMapping("client/bankAccount/new/{id}")
-    public ResponseEntity<BankAccountDto> newBankAccount(@RequestBody BankAccount bankAccount,
+    @PostMapping("client/{id}/bankAccount/new")
+    public ResponseEntity<BankAccountDto> newBankAccount(@RequestBody BankAccountCreateDto bankAccount,
                                                       @PathVariable Long id) {
         BankAccountDto bankAccount1 = clientService.addNewBankAccount(id, bankAccount);
         if (bankAccount1 != null) {

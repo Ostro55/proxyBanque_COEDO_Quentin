@@ -1,6 +1,6 @@
 package org.formation.proxyBanque.service;
 
-import org.formation.proxyBanque.Dto.BankAccountDto;
+import org.formation.proxyBanque.Dto.*;
 import org.formation.proxyBanque.entity.BankAccount;
 import org.formation.proxyBanque.entity.Client;
 
@@ -10,19 +10,19 @@ import java.util.Set;
 
 public interface IClientService {
 
-    Client createClient(Client client);
+    ClientDto createClient(ClientCreateDto client);
 
-    List<Client> getClients();
+    List<ClientDto> getClients();
 
-    Optional<Client> getClientById(Long id);
+    Optional<ClientDto> getClientById(Long id);
 
-    Optional<Client> DeleteClientById(Long id);
+    Optional<ClientDto> DeleteClientById(Long id);
 
-    Optional<Client> UpdateClient(Client client);
+    Optional<ClientDto> UpdateClient(Long id, ClientUpgradeDto client);
 
     Set<BankAccountDto> getBankAccounts(Long id);
 
-    BankAccountDto addNewBankAccount(Long id, BankAccount bankAccount);
+    BankAccountDto addNewBankAccount(Long id, BankAccountCreateDto bankAccount);
 
     // Did not have time to use
     BankAccountDto remove(Long id, Long bankAccountId);
